@@ -8,6 +8,8 @@ ________________________________________________________________________________
 Description of folders/files in top directory
 
 psychophysics: Psychophysical data and analysis code to plot the data.
+- Contains a script for generating the main results plots (individual and aggregate results for the temporal and spatial experiments) 
+- Contains a script for the bootstrap analysis to compute CIs on the data and aggregate temporal data fits 
 
 helperFunctions: A variety of support functions.
 
