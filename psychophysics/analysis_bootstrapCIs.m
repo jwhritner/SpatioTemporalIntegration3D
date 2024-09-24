@@ -25,7 +25,7 @@ close(h)
 
 bsDataPctCrctT = bsDataPctCrctT * 100; % get into percentages
 % evaluate/visualize the distribution/pct corrects
-bsDataStruct.meanPctCrctT = mean(bsDataPctCrctT,3); % make sure these are basically equal to the pct corrects from our data for each duration/subject. should be very close if not equal
+bsDataStruct.meanPctCrctT = mean(bsDataPctCrctT,3); % check against the pct corrects from our data for each duration/subject
 bsStdPctCrctT = std(bsDataPctCrctT,0,3); % very small std expected
 % want standard error/68 and 95% conf intervals for the means of the pct
 % corrects (10 k reps)
@@ -35,7 +35,6 @@ bsDataStruct.semT = bsStdPctCrctT; % std of the sampling distribution is the sta
 %% bootstrapping CIs for aggregate (stacking all subjects on top of each other so we have 800 trials instead of 200 from 4 subjects
 bsAggDataT = zeros(800,16,2,nBootReps); % 800 trials x 16 durs x 2 conditions (will split after)
 % need to reshape responses to have 800 x 16 x 2 (stacking subjects on top
-% can do this in fewer steps but wanted to be explicit
 responsesT_cd = responsesT(:,:,[1 3 5 7]);
 responsesT_iovd = responsesT(:,:,[2 4 6 8]);
 aggResponsesT(:,:,1) = [responsesT_cd(:,:,1);responsesT_cd(:,:,2);responsesT_cd(:,:,3);responsesT_cd(:,:,4)];
@@ -58,7 +57,7 @@ end
 close(h)
 
 bsAggDataPctCrctT = bsAggDataPctCrctT * 100;
-bsDataStruct.aggMeanPctCrctT = mean(bsAggDataPctCrctT,3); % make sure these are basically equal to the pct corrects from our data for each duration/subject. should be very close if not equal
+bsDataStruct.aggMeanPctCrctT = mean(bsAggDataPctCrctT,3); % check against the pct corrects from our data for each duration/subject
 bsAggStdPctCrctT = std(bsAggDataPctCrctT,[],3); %
 bsDataStruct.aggSEMt = bsAggStdPctCrctT; % std of the sampling distribution is the standard error
 % 95% ci
@@ -119,7 +118,7 @@ tau_cd_agg = round(tau_cd_agg,4);
 weirdTauInds_cd = find(tau_cd_agg > 1); % need to reject taus greater than 1
 tau_cd_agg(weirdTauInds_cd) = nan; % need to reject taus greater than 1
 meanTau_cd_agg = mean(tau_cd_agg,2,'omitnan') %
-% std(tau_cd,3,'omitnan') % can i get this with nans?
+% std(tau_cd,3,'omitnan') 
 meanIndFitVals_cd_agg = mean(indFitVals_cd_agg,2)*100;
 % conf intervals for fitted values
 bsAggStdTau_cd = std(tau_cd_agg,[],2); %
@@ -128,8 +127,7 @@ bsAggSEMtau_cd = bsAggStdTau_cd; % std of sampling distribution is sem
 uci95tau_cd = meanTau_cd_agg + 1.96.* bsAggSEMtau_cd; % approximate upper 95 pct bound
 lci95tau_cd = meanTau_cd_agg - 1.96.* bsAggSEMtau_cd; % approximate lower bound
 
-% same thing for iovd (could do this in one loop it just takes a whle so
-% w.e)
+% same thing for iovd 
 bsAggDataT_iovd = squeeze(bsAggDataTStacked(:,2,:));
 clear indFitVals_iovd_agg;
 clear fitParams_iovd_agg;
@@ -153,8 +151,8 @@ tau_iovd_agg = round(tau_iovd_agg,4);
 weirdTauInds_iovd = find(tau_iovd_agg > 1); % need to reject taus greater than 1
 tau_iovd_agg(weirdTauInds_iovd) = nan; % need to reject taus greater than 1
 meanTau_iovd_agg = mean(tau_iovd_agg,2,'omitnan') %
-meanIndFitVals_iovd_agg = mean(indFitVals_iovd_agg,2)*100; % these are basically the same as the actualy pctCrct (confirm from saved aggData fitted values)
-%  just need CIs now...
+meanIndFitVals_iovd_agg = mean(indFitVals_iovd_agg,2)*100; % check against pctCrct (confirm from saved aggData fitted values)
+%  get CIs
 bsAggStdTau_iovd = std(tau_iovd_agg,[],2); %
 bsAggSEMtau_iovd = bsAggStdTau_iovd;
 % 95% ci
@@ -165,12 +163,12 @@ lci95tau_iovd = meanTau_iovd_agg - 1.96.* bsAggSEMtau_iovd; % approximate lower 
 figure()
 PaperPositionMode = 'manual';
 orient('landscape')
-histogram(tau_cd_agg,'Normalization','probability','FaceColor',[0 0.4470 0.7410]) % ok for iovd looks good except for subj 3
+histogram(tau_cd_agg,'Normalization','probability','FaceColor',[0 0.4470 0.7410]) 
 hold on
 xline(meanTau_cd_agg,'k','LineWidth',2);
 xline(uci95tau_cd,'r','LineWidth',2);
 xline(lci95tau_cd,'r','LineWidth',2);
-histogram(tau_iovd_agg,'Normalization','probability','FaceColor',[0.9100 0.4100 0.1700]) % ok for iovd looks good except for subj 3
+histogram(tau_iovd_agg,'Normalization','probability','FaceColor',[0.9100 0.4100 0.1700])
 hold on
 xline(meanTau_iovd_agg,'k','LineWidth',2);
 xline(uci95tau_iovd,'r','LineWidth',2);
@@ -197,7 +195,7 @@ for kk = 1:nBootReps
 end
 
 bsDataPctCrctS = bsDataPctCrctS * 100; % get into percentages
-bsDataStruct.meanPctCrctS = mean(bsDataPctCrctS,3); % make sure these are basically equal to the pct corrects from our data for each duration/subject. should be very close if not equal
+bsDataStruct.meanPctCrctS = mean(bsDataPctCrctS,3); % check against the pct corrects from our data for each duration/subject
 bsStdPctCrctS = std(bsDataPctCrctS,0,3); % very small std expected
 bsDataStruct.semS = bsStdPctCrctS; 
  
@@ -205,7 +203,6 @@ bsDataStruct.semS = bsStdPctCrctS;
 bsAggDataS = zeros(1200,4,2,nBootReps);  % should be 1200 trials x 4 alphas x 2 conditions (iovd/cd) x nBootReps
 
 % need to reshape responses to have 1200 x 4 x 2 (stacking subjects on top
-% can do this in fewer steps but wanted to be explicit for now. fix later
 responsesS_cd = responsesS(:,:,[1 3 5]);
 responsesS_iovd = responsesS(:,:,[2 4 6]);
 
@@ -228,7 +225,7 @@ for kk = 1:nBootReps
     
 end
 bsAggDataPctCrctS = bsAggDataPctCrctS * 100;
-bsDataStruct.aggMeanPctCrctS = mean(bsAggDataPctCrctS,3); % make sure these are basically equal to the pct corrects from our data for each duration/subject. should be very close if not equal
+bsDataStruct.aggMeanPctCrctS = mean(bsAggDataPctCrctS,3); % check against the pct corrects from our data for each duration/subject
 bsAggStdPctCrctS = std(bsAggDataPctCrctS,[],3);
 bsDataStruct.aggSEMs = bsAggStdPctCrctS; 
 % 95% ci
@@ -252,7 +249,7 @@ bsAggMeanPctCrct_iovd = bsDataStruct.aggMeanPctCrctS(:,2);
 uci_iovd = uci95(:,2);
 lci_iovd = lci95(:,2);
 
-% let's look at the bootstrap data and see if they look ok
+% let's look at the bootstrap data
 figure()
 for ii = 1:size(bsAggDataPctCrctS,1)
     subplot(1,4,ii)
